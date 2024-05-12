@@ -1,43 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GoPlaces : MonoBehaviour
 {
-    public float _float;
+    [SerializeField] private Transform _pointContainer;
+    [SerializeField] private float _speed;
 
+    private Transform[] _points;
+    private int _currentPoint;
 
-
-    public Transform AllPlacespoint;
-    Transform[] arrayPlaces;
-    private int NumberOfPlaceInArrayPlaces;
-    void Start() {
-        arrayPlaces = new Transform[AllPlacespoint.childCount];
-
-        for (int abcd = 0; abcd < AllPlacespoint.childCount; abcd++)
-            arrayPlaces[abcd] = AllPlacespoint.GetChild(abcd).GetComponent<Transform>();
-    }
-    // Update is called once per frame
-    public void Update()
+    private void Start()
     {
-        var _pointByNumberInArray= arrayPlaces[NumberOfPlaceInArrayPlaces];
-        transform.position   =  Vector3.MoveTowards(transform.position , _pointByNumberInArray.position, _float * Time.deltaTime);
+        _points = new Transform[_pointContainer.childCount];
 
-
-        if (transform.position == _pointByNumberInArray.position)  NextPlaceTakerLogic();
-    }
-    public Vector3 NextPlaceTakerLogic(){
-        NumberOfPlaceInArrayPlaces++;
-
-        if (NumberOfPlaceInArrayPlaces == arrayPlaces.Length)
-            NumberOfPlaceInArrayPlaces  = 0;
-
-        var thisPointVector = arrayPlaces[NumberOfPlaceInArrayPlaces].transform.position;
-        transform.forward = thisPointVector - transform.position;
-        return thisPointVector;
-
-        
+        for (int i = 0; i < _pointContainer.childCount; i++)
+            _points[i] = _pointContainer.GetChild(i).GetComponent<Transform>();
     }
 
+    private void Update()
+    {
+        var target = _points[_currentPoint];
 
+        transform.position =
+            Vector3.MoveTowards(transform.position, target.position, _speed * Time.deltaTime);
+
+        if (transform.position == target.position)
+            ChangeNextPlace();
+    }
+
+    private void ChangeNextPlace()
+    {
+        _currentPoint++;
+
+        if (_currentPoint == _points.Length)
+            _currentPoint = 0;
+    }
 }
