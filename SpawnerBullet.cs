@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class SpawnerBullet : MonoBehaviour
 {
     [SerializeField] private float _speed;
